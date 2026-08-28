@@ -1,0 +1,6 @@
+--2026-08-13 08:46:47--  https://cloud.zed.dev/releases/stable/latest/download?asset=zed
+Resolving cloud.zed.dev (cloud.zed.dev)... 104.18.7.151, 104.18.6.151, 2606:4700::6812:797, ...
+Connecting to cloud.zed.dev (cloud.zed.dev)|104.18.7.151|:443... connected.
+HTTP request sent, awaiting response... 400 Bad Request
+2026-08-13 08:46:49 ERROR 400: Bad Request.
+

@@ -3,7 +3,15 @@ from typing import Protocol
 class Observer(Protocol):
     def update(self, message: str) -> None:
         ...
-
+        
+class Subject(Protocol):
+    def attach(self, observer: Observer) -> None:
+        ...
+    def detach(self, observer: Observer) -> None:
+        ...
+    def notify(self, message: str) -> None:
+        ...
+        
 class Subject:
     def __init__(self) -> None:
         self._observers: list[Observer] = []
