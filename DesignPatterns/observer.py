@@ -3,11 +3,18 @@ from typing import Protocol
 class Observer(Protocol):
     def update(self, message: str) -> None:
         ...
-
+        
+class Subject(Protocol):
+    def attach(self, observer: Observer) -> None:
+        ...
+    def detach(self, observer: Observer) -> None:
+        ...
+    def notify(self, message: str) -> None:
+        ...
+        
 class Subject:
     def __init__(self) -> None:
         self._observers: list[Observer] = []
-        self.changed = False
 
     def attach(self, observer: Observer) -> None:
         self._observers.append(observer)
@@ -15,18 +22,6 @@ class Subject:
     def detach(self, observer: Observer) -> None:
         self._observers.remove(observer)
         
-    # Allows us to specify conditions under which
-    # notifications should be sent out
-    # say, past a given threshold or a certain frequency
-    def set_changed(self):
-        self.changed = True
-        
-    def clear_changed(self):
-        self.changed = False
-        
-    def has_changed(self):
-        return self.changed
-
     def notify(self, message: str) -> None:
         if self.changed:
             for observer in self._observers:
@@ -49,5 +44,4 @@ if __name__ == "__main__":
     subject.attach(monitor_observer)
     subject.attach(logger_observer)
 
-    subject.set_changed()   # Must be called before any notifications can be sent
     subject.notify("Hello, Observers!")
