@@ -1,5 +1,8 @@
 from abc import ABC, abstractmethod
+from enum import Enum
 
+
+# The same interface that ALL products must implement
 class Pizza(ABC):
     def __init__(self, name: str, dough: str, sauce: str):
         self.name = name
@@ -24,6 +27,15 @@ class Pizza(ABC):
         print("Place pizza in official PizzaStore box")
 
 
+# Pizza type enum for type safety
+class PizzaType(Enum):
+    CHESE = "cheese"
+    PEPPERONI = "pepperoni"
+    VEGGIE = "veggie"
+    CLAM = "clam"
+
+
+# THE PRODUCT CLASSES
 class NYStyleCheesePizza(Pizza):
     def __init__(self):
         super().__init__(
@@ -47,10 +59,11 @@ class ChicagoStyleCheesePizza(Pizza):
         print("Cutting the pizza into square slices")
 
 
+# Abstract Creator Class
 class PizzaStore(ABC):
     # Factory method
-    def order_pizza(self, type: str) -> Pizza:
-        pizza = self.create_pizza(type)
+    def order_pizza(self, pizza_type: PizzaType) -> Pizza:
+        pizza = self.create_pizza(pizza_type)
 
         pizza.prepare()
         pizza.bake()
@@ -60,25 +73,27 @@ class PizzaStore(ABC):
         return pizza
 
     @abstractmethod
-    def create_pizza(self, type: str) -> Pizza:
+    def create_pizza(self, pizza_type: PizzaType) -> Pizza:
         """Factory Method to create pizza instances based on type"""
-        pass
 
 
+# CONCRETE CREATOR CLASSES
+# Inherit the creator's methods
+# implementing the abstract factory method
 class NYPizzaStore(PizzaStore):
-    def create_pizza(self, type: str) -> Pizza:
-        if type == "cheese":
+    def create_pizza(self, pizza_type: PizzaType) -> Pizza:
+        if pizza_type == PizzaType.CHESE:
             return NYStyleCheesePizza()
         else:
-            raise ValueError(f"Unknown pizza type: {type}")
+            raise ValueError(f"Unknown pizza type: {pizza_type}")
 
 
 class ChicagoPizzaStore(PizzaStore):
-    def create_pizza(self, type: str) -> Pizza:
-        if type == "cheese":
+    def create_pizza(self, pizza_type: PizzaType) -> Pizza:
+        if pizza_type == PizzaType.CHESE:
             return ChicagoStyleCheesePizza()
         else:
-            raise ValueError(f"Unknown pizza type: {type}")
+            raise ValueError(f"Unknown pizza type: {pizza_type}")
 
 
 if __name__ == "__main__":
@@ -86,10 +101,9 @@ if __name__ == "__main__":
     chicago_store = ChicagoPizzaStore()
 
     print("--- Ethan ordered a NY Style Cheese Pizza ---")
-    pizza = ny_store.order_pizza("cheese")
+    pizza = ny_store.order_pizza(PizzaType.CHESE)
     print(f"Ethan got a {pizza.name}\n")
 
     print("--- Joel ordered a Chicago Style Cheese Pizza ---")
-    pizza = chicago_store.order_pizza("cheese")
+    pizza = chicago_store.order_pizza(PizzaType.CHESE)
     print(f"Joel got a {pizza.name}\n")
-
